@@ -98,7 +98,15 @@ def calculate_dcf_metrics(data_input):
     
     # Lấy dữ liệu đã được trích xuất/chỉnh sửa
     I0 = data_input['investment_capital']
-    N = data_input['project_lifespan']
+    
+    # FIX LỖI: Chuyển đổi 'project_lifespan' (N) thành số nguyên vì nó được dùng trong range()
+    N_float = data_input['project_lifespan']
+    if abs(N_float - round(N_float)) > 0.001:
+        # Nếu giá trị là số thập phân đáng kể, cảnh báo. Ví dụ: 5.5
+        raise ValueError(f"Dòng đời dự án phải là số nguyên (năm). Giá trị hiện tại là {N_float}.")
+        
+    N = int(round(N_float))
+    
     R_annual = data_input['annual_revenue']
     C_annual = data_input['annual_cost']
     WACC = data_input['wacc']
